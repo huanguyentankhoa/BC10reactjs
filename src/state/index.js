@@ -15,6 +15,7 @@ export default class State extends Component {
         console.log(this.isLoggin);
         this.renderHTML();
     }
+    
   renderHTML = () => {
     // if (!this.isLoggin) {
     //   this.isLoggin = true;

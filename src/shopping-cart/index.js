@@ -1,59 +1,89 @@
-// import { data } from "jquery";
 import React, { Component } from "react";
 import DanhSachSanPham from "./danh-sach-san-pham";
 import Modal from "./modal";
-// import data from "./data.json";
+import data from "./data.json";
 
 export default class ShoppingCart extends Component {
   constructor(props) {
     super(props);
     this.state = {
-        listProduct: [
-          {
-            "maSP": 1,
-            "tenSP": "VinSmart Live",
-            "manHinh": "AMOLED, 6.2\", Full HD+",
-            "heDieuHanh": "Android 9.0 (Pie)",
-            "cameraTruoc": "20 MP",
-            "cameraSau": "Chính 48 MP & Phụ 8 MP, 5 MP",
-            "ram": "4 GB",
-            "rom": "64 GB",
-            "giaBan": 5700000,
-            "hinhAnh": "./img/vsphone.jpg"
-          },
-        
-          {
-            "maSP": 2,
-            "tenSP": "Meizu 16Xs",
-            "manHinh": "AMOLED, FHD+ 2232 x 1080 pixels",
-            "heDieuHanh": "Android 9.0 (Pie); Flyme",
-            "cameraTruoc": "20 MP",
-            "cameraSau": "Chính 48 MP & Phụ 8 MP, 5 MP",
-            "ram": "4 GB",
-            "rom": "64 GB",
-            "giaBan": 7600000,
-            "hinhAnh": "./img/meizuphone.jpg"
-          },
-        
-          {
-            "maSP": 3,
-            "tenSP": "Iphone XS Max",
-            "manHinh": "OLED, 6.5\", 1242 x 2688 Pixels",
-            "heDieuHanh": "iOS 12",
-            "cameraSau": "Chính 12 MP & Phụ 12 MP",
-            "cameraTruoc": "7 MP",
-            "ram": "4 GB",
-            "rom": "64 GB",
-            "giaBan": 27000000,
-            "hinhAnh": "./img/applephone.jpg"
-          }
-        ]
-        ,
+      listProduct: data,
+      detailProduct: data[0],
+      listCart: [],
     };
   }
+  handleUpdateSL = (product, typeUpdate) => {
+    let listCart = [...this.state.listCart];
+    const index = this._findIndex(product.maSP);
+    if (index !== -1) {
+      if (typeUpdate) {
+        listCart[index].soLuong += 1;
+      } else {
+        if (listCart[index].soLuong > 1) listCart[index].soLuong -= 1;
+      }
+      this.setState({
+        listCart,
+      });
+    }
+  };
+
+  handleDelete = (product) => {
+    console.log(product);
+    let listCart = [...this.state.listCart];
+    const index = this._findIndex(product.maSP);
+    if (index !== -1) {
+      listCart.splice(index, 1);
+      this.setState({
+        listCart,
+      });
+    }
+  };
+  handleGetProduct = (product) => {
+    this.setState({
+      detailProduct: product,
+    });
+  };
+  _findIndex = (maSP) => {
+    return this.state.listCart.findIndex((item) => {
+      return item.maSP === maSP;
+    });
+  };
+  handleAddProductCart = (product) => {
+    let listCart = [...this.state.listCart];
+    const index = this._findIndex(product.maSP);
+    if (index !== -1) {
+      listCart[index].soLuong += 1;
+    } else {
+      const productCart = {
+        maSP: product.maSP,
+        tenSP: product.tenSP,
+        hinhAnh: product.hinhAnh,
+        soLuong: 1,
+        donGia: product.giaBan,
+      };
+      listCart = [...this.state.listCart, productCart];
+    }
+
+    // let listCart=this.state.listCart;
+    // listCart.push(productCart);
+
+    this.setState({
+      listCart: listCart,
+    });
+  };
+  total=()=>{
+    // let sum = 0;
+    // this.state.listCart.forEach((item)=>{
+    //   sum+=item.soLuong;
+    // })
+    // return sum;
+    return this.state.listCart.reduce((sum,item)=>{
+      return sum+=item.soLuong;
+    },0);
+  }
   render() {
+    const { listProduct, detailProduct, listCart } = this.state;
     return (
-      // const {listProduct}=this.state;
       <div>
         <h3 className="title">Bài tập giỏ hàng</h3>
         <div className="container">
@@ -62,14 +92,22 @@ export default class ShoppingCart extends Component {
             data-toggle="modal"
             data-target="#modelId"
           >
-            Giỏ hàng (0)
+            Giỏ hàng ({this.total()})
           </button>
         </div>
-        <DanhSachSanPham listProduct={this.state.listProduct} />
-        <Modal />
+        <DanhSachSanPham
+          listProduct={listProduct}
+          getDetailProduct={this.handleGetProduct}
+          getProductAddCart={this.handleAddProductCart}
+        />
+        <Modal
+          listCart={listCart}
+          getProductDelete={this.handleDelete}
+          getProductUpdate={this.handleUpdateSL}
+        />
         <div className="row">
           <div className="col-sm-5">
-            <img className="img-fluid" src="./img/vsphone.jpg" alt="" />
+            <img className="img-fluid" src={detailProduct.hinhAnh} alt="" />
           </div>
           <div className="col-sm-7">
             <h3>Thông số kỹ thuật</h3>
@@ -77,27 +115,27 @@ export default class ShoppingCart extends Component {
               <tbody>
                 <tr>
                   <td>Màn hình</td>
-                  <td>AMOLED, FHD+ 2232 x 1080 pixels</td>
+                  <td>{detailProduct.manHinh}</td>
                 </tr>
                 <tr>
                   <td>Hệ điều hành</td>
-                  <td>Android 9.0 (Pie)</td>
+                  <td>{detailProduct.heDieuHanh}</td>
                 </tr>
                 <tr>
                   <td>Camera trước</td>
-                  <td>20 MP</td>
+                  <td>{detailProduct.cameraTruoc}</td>
                 </tr>
                 <tr>
                   <td>Camera sau</td>
-                  <td>Chính 48 MP & Phụ 8 MP, 5 MP</td>
+                  <td>{detailProduct.cameraSau}</td>
                 </tr>
                 <tr>
                   <td>RAM</td>
-                  <td>4 GB</td>
+                  <td>{detailProduct.ram}</td>
                 </tr>
                 <tr>
                   <td>ROM</td>
-                  <td>6 GB</td>
+                  <td>{detailProduct.rom}</td>
                 </tr>
               </tbody>
             </table>
