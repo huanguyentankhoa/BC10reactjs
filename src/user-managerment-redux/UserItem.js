@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-
+import { connect } from "react-redux";
 class UserItem extends Component {
   render() {
     const { user } = this.props;
@@ -16,7 +16,7 @@ class UserItem extends Component {
             data-toggle="modal"
             data-target="#modelIdUser"
             onClick={() => {
-              this.props.getUserEdit(user);
+              this.props.editUser(user);
             }}
           >
             Edit
@@ -24,7 +24,7 @@ class UserItem extends Component {
           <button
             className="btn btn-danger"
             onClick={() => {
-              this.props.getUserDelete(user);
+              this.props.deleteUser(user);
             }}
           >
             Delete
@@ -34,5 +34,25 @@ class UserItem extends Component {
     );
   }
 }
+const mapDispatchToProps = (dispatch) => {
+  return {
+    // keydeleteUser nó chính là props tại component UserItem
+    deleteUser: (user) => {
+      const action = {
+        type: "DELETE",
+        payload: user,
+      };
+      // Đẩy action lên reducer
+      dispatch(action);
+    },
+    editUser: (user) => {
+      const action = {
+        type: "EDIT",
+        payload: user,
+      };
+      dispatch(action);
+    },
+  };
+};
 
-export default UserItem;
+export default connect(null, mapDispatchToProps)(UserItem);

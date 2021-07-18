@@ -1,9 +1,9 @@
 import React, { Component, createRef } from "react";
-
+import { connect } from "react-redux";
 class Modal extends Component {
   constructor(props) {
     super(props);
-    this.close=createRef();
+    this.close = createRef();
     this.state = {
       id: "",
       username: "",
@@ -12,9 +12,9 @@ class Modal extends Component {
       phoneNumber: "",
       type: "USER",
     };
-  };
-  UNSAFE_componentWillReceiveProps(nextProps){
-    if (nextProps && nextProps.userEdit ){
+  }
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    if (nextProps && nextProps.userEdit) {
       this.setState({
         id: nextProps.userEdit.id,
         username: nextProps.userEdit.username,
@@ -22,8 +22,8 @@ class Modal extends Component {
         email: nextProps.userEdit.email,
         phoneNumber: nextProps.userEdit.phoneNumber,
         type: nextProps.userEdit.type,
-      })
-    }else{
+      });
+    } else {
       this.setState({
         id: "",
         username: "",
@@ -31,27 +31,24 @@ class Modal extends Component {
         email: "",
         phoneNumber: "",
         type: "USER",
-      })
+      });
     }
-    
   }
-  handleSubmit=(event)=>{
+  handleSubmit = (event) => {
     event.preventDefault();
     this.props.onSubmit(this.state);
     this.close.current.click();
   };
   handleOnchange = (event) => {
     const { name, value } = event.target;
-    this.setState(
-      {
-        [name]: value,
-      }
-    );
+    this.setState({
+      [name]: value,
+    });
   };
 
   render() {
-    const {username,fullname,email,phoneNumber,type}=this.state;
-    console.log(this.props.userEdit)
+    const { username, fullname, email, phoneNumber, type } = this.state;
+
     return (
       <div
         className="modal fade"
@@ -64,7 +61,9 @@ class Modal extends Component {
         <div className="modal-dialog" role="document">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title">{this.props.userEdit ? "EDIT USER":"ADD USER"}</h5>
+              <h5 className="modal-title">
+                {this.props.userEdit ? "EDIT USER" : "ADD USER"}
+              </h5>
               <button
                 type="button"
                 className="close"
@@ -140,5 +139,21 @@ class Modal extends Component {
     );
   }
 }
+const mapStateToProps = (state) => {
+  return {
+    userEdit: state.userReducer.userEdit,
+  };
+};
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onSubmit: (user) => {
+      const action = {
+        type: "SUBMIT",
+        payload: user,
+      };
+      dispatch(action);
+    },
+  };
+};
 
-export default Modal;
+export default connect(mapStateToProps, mapDispatchToProps)(Modal);
