@@ -3,6 +3,7 @@ import Search from "./Search";
 import Users from "./Users";
 import Modal from "./Modal";
 import { connect } from "react-redux";
+import { actEdit } from "../redux/actions";
 class UserManagerment extends Component {
   render() {
     return (
@@ -30,11 +31,7 @@ class UserManagerment extends Component {
 const mapDispatchToProps = (dispatch) => {
   return {
     addUser: () => {
-      const action = {
-        type: "EDIT",
-        payload: null,
-      };
-      dispatch(action);
+      dispatch(actEdit(null));
     },
   };
 };

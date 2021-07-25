@@ -1,3 +1,5 @@
+import { DELETE, EDIT, GET_KEYWORD, SUBMIT } from "../constants";
+
 let initialState = {
   userList: [
     {
@@ -24,7 +26,7 @@ const userReducer = (state = initialState, action) => {
   switch (action.type) {
     // case value:
     //     break;
-    case "DELETE": {
+    case DELETE: {
       let userList = [...state.userList];
       let index = userList.findIndex((user) => user.id === action.payload.id);
       if (index !== -1) {
@@ -33,15 +35,15 @@ const userReducer = (state = initialState, action) => {
       }
       return { ...state };
     }
-    case "GET_KEYWORD": {
+    case GET_KEYWORD: {
       state.keyword = action.payload;
       return { ...state };
     }
-    case "EDIT": {
+    case EDIT: {
       state.userEdit = action.payload;
       return { ...state };
     }
-    case "SUBMIT": {
+    case SUBMIT: {
       let userList = [...state.userList];
       if (action.payload.id) {
         let index = userList.findIndex((user) => user.id === action.payload.id);

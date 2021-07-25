@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { actDelete, actEdit } from "../redux/actions";
 class UserItem extends Component {
   render() {
     const { user } = this.props;
@@ -38,19 +39,11 @@ const mapDispatchToProps = (dispatch) => {
   return {
     // keydeleteUser nó chính là props tại component UserItem
     deleteUser: (user) => {
-      const action = {
-        type: "DELETE",
-        payload: user,
-      };
       // Đẩy action lên reducer
-      dispatch(action);
+      dispatch(actDelete(user));
     },
     editUser: (user) => {
-      const action = {
-        type: "EDIT",
-        payload: user,
-      };
-      dispatch(action);
+      dispatch(actEdit(user));
     },
   };
 };

@@ -9,6 +9,7 @@ import "./App.css";
 // import ShoppingCart from './shopping-cart';
 //import UserManagerment from './user-managerment';
 import UserManagermentRedux from "./user-managerment-redux";
+import FormValidation from "./form-validation";
 function App() {
   return (
     <div>
@@ -21,6 +22,7 @@ function App() {
       <ShoppingCart/>*/}
       {/* <UserManagerment/> */}
       <UserManagermentRedux />
+      <FormValidation />
     </div>
   );
 }

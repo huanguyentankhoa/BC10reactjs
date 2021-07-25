@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { actGetKeyword } from "../redux/actions";
 class Search extends Component {
   handleGetKeyword = (event) => {
     this.props.getKeyword(event.target.value);
@@ -17,12 +18,8 @@ class Search extends Component {
 const mapDispatchToProps = (dispatch) => {
   return {
     getKeyword: (keyword) => {
-      const action = {
-        type: "GET_KEYWORD",
-        payload: keyword,
-      };
       // Đẩy action lên reducer
-      dispatch(action);
+      dispatch(actGetKeyword(keyword));
     },
   };
 };
